@@ -5,8 +5,12 @@ import pages.HomePage;
 import pages.ShoesPage;
 import java.util.List;
 
-public class NikeTest {
+public class NikeTestPrices {
     public static void main(String[] args) {
+        /* The next test
+         will check whether the prices match
+         what I defined as the maximum price or not.
+         */
         System.out.println("test start");
         BaseDriver.setupDriver();
         HomePage homePage = new HomePage(BaseDriver.getDriver());
@@ -31,7 +35,19 @@ public class NikeTest {
             System.out.println(product);
         }
 
+        if (shoesPage.isFirstProductPriceAbove100()) {
+            System.out.println("Test failed: The price of the first product is above 100 ILS");
+            System.exit(1); // Test fail
+        } else {
+            System.out.println("The price of the first product is below 100 ILS");
+        }
+        shoesPage.debugProductPrices();
+
+
+
         BaseDriver.closeDriver();
         System.out.println("End test");
     }
+
+
 }

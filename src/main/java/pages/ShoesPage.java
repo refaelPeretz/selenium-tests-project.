@@ -8,7 +8,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class ShoesPage {
 
@@ -54,4 +57,85 @@ public class ShoesPage {
         }
         return products;
     }
+
+    public boolean isFirstProductPriceAbove100() {
+        WebElement firstProductPriceElement = driver.findElement(By.className("product-price"));
+        String firstProductPriceText = firstProductPriceElement.getText();
+        System.out.println("First product price text: " + firstProductPriceText); // הדפסה לבדיקה
+        double firstProductPrice = Double.parseDouble(firstProductPriceText.replaceAll("[^\\d.]", ""));
+        return firstProductPrice > 100;
+    }
+    public void debugProductPrices() {
+        List<WebElement> prices = driver.findElements(By.className("product-price"));
+        System.out.println("Number of price elements found: " + prices.size());
+        for (WebElement price : prices) {
+            System.out.println("Product price text: " + price.getText());
+        }
+    }
+    public void selectWalkingCategory() throws InterruptedException {
+//        WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(15));
+//        WebElement walkingCategory = wait2.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.linkText("Walking"))));
+        sleep(5000);
+        WebElement walkingCategory = driver.findElement(By.cssSelector("[data-ndx='9']"));
+
+        walkingCategory.click();
+    }
+
+    public int amountOfProducts(){
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(".product-card__hero-image css-1fxh5tw")));
+
+// מצא וספור את כל המוצרים
+        List<WebElement> products = driver.findElements(By.cssSelector("div.product-card[data-testid='product-card']"));
+        int productCount = products.size();
+        System.out.println("Number of products in the 'Walking' category: " + productCount);
+        return productCount;
+    }
+    public void fallsTestAmount(int size, int min){
+        if (size < min){
+            System.out.println("The amount is less than the minimum required");
+        }
+        else {
+            System.out.println("The amount is ok with the minimum required");
+
+        }
+    }
+
+    public boolean isPricesSortedLowToHigh(int count) {
+        // אסוף את כל מחירי המוצרים שמוצגים
+        //product-price__wrapper css-9xqpgk
+        List<WebElement> pricesElements = driver.findElements(By.className("product-price__wrapper")); //product-card__price
+        List<Double> prices = new ArrayList<>();
+        for (WebElement i: pricesElements){
+            System.out.println(i.getText());
+        }
+        System.out.println(pricesElements);
+        System.out.println("entre -----");
+
+        // הוצאת טקסט והמרה למספרים
+        for (int i = 0; i < Math.min(count, pricesElements.size()); i++) {
+            String priceText = pricesElements.get(i).getText();
+            double price = extractPrice(priceText); // שימוש בפונקציה לחילוץ המחיר
+            prices.add(price);
+        }
+
+        // יצירת עותק של הרשימה ובדיקת המיון
+        List<Double> sortedPrices = new ArrayList<>(prices);
+        Collections.sort(sortedPrices);
+
+        // החזרה אם הרשימה זהה
+        return prices.equals(sortedPrices);
+    }
+
+    // פונקציה לחילוץ מחיר מטקסט
+    private double extractPrice(String priceText) {
+        // הסרת כל תו שאינו ספרה או נקודה
+        String numericPrice = priceText.replaceAll("[^\\d.]", "");
+        return Double.parseDouble(numericPrice);
+    }
+
+
+
+
+
 }
