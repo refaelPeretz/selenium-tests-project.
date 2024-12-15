@@ -13,11 +13,11 @@ import java.util.List;
 
 import static java.lang.Thread.sleep;
 
-public class ShoesPage {
+public class nikeShoesPage {
 
     private WebDriver driver;
 
-    public ShoesPage(WebDriver driver) {
+    public nikeShoesPage(WebDriver driver) {
         this.driver = driver;
     }
     public void selectShoesCategory() {
@@ -85,13 +85,13 @@ public class ShoesPage {
 //        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 //        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(".product-card__hero-image css-1fxh5tw")));
 
-// מצא וספור את כל המוצרים
+// Find and count all the products
         List<WebElement> products = driver.findElements(By.cssSelector("div.product-card[data-testid='product-card']"));
         int productCount = products.size();
         System.out.println("Number of products in the 'Walking' category: " + productCount);
         return productCount;
     }
-    public void fallsTestAmount(int size, int min){
+    public void verifyTestAmount(int size, int min){
         if (size < min){
             System.out.println("The amount is less than the minimum required");
         }
@@ -102,7 +102,7 @@ public class ShoesPage {
     }
 
     public boolean isPricesSortedLowToHigh(int count) {
-        // אסוף את כל מחירי המוצרים שמוצגים
+
         //product-price__wrapper css-9xqpgk
         List<WebElement> pricesElements = driver.findElements(By.className("product-price__wrapper")); //product-card__price
         List<Double> prices = new ArrayList<>();
@@ -110,28 +110,42 @@ public class ShoesPage {
             System.out.println(i.getText());
         }
         System.out.println(pricesElements);
-        System.out.println("entre -----");
 
-        // הוצאת טקסט והמרה למספרים
+
+        // Text output and conversion to numbers
         for (int i = 0; i < Math.min(count, pricesElements.size()); i++) {
             String priceText = pricesElements.get(i).getText();
             double price = extractPrice(priceText); // שימוש בפונקציה לחילוץ המחיר
             prices.add(price);
         }
 
-        // יצירת עותק של הרשימה ובדיקת המיון
+        // Create a copy of the list and check the sorting
         List<Double> sortedPrices = new ArrayList<>(prices);
         Collections.sort(sortedPrices);
 
-        // החזרה אם הרשימה זהה
+        // Return if the list is the same
         return prices.equals(sortedPrices);
     }
 
-    // פונקציה לחילוץ מחיר מטקסט
+    // Function to extract price from text
     private double extractPrice(String priceText) {
-        // הסרת כל תו שאינו ספרה או נקודה
+        // Remove any character that is not a digit or period.
         String numericPrice = priceText.replaceAll("[^\\d.]", "");
         return Double.parseDouble(numericPrice);
+    }
+
+    public void checkPriceUnderLimit(){
+        List<String> products = getTopProducts(3);
+        System.out.println("Here are the top products: ");
+        for (String product : products) {
+            System.out.println(product);
+        }
+
+        if (isFirstProductPriceAbove100()) {
+            System.out.println("Test failed: The price of the first product is above 100 ILS");
+        } else {
+            System.out.println("The price of the first product is below 100 ILS");
+        }
     }
 
 

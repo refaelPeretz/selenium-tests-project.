@@ -1,35 +1,27 @@
 package tests;
 
 import base.BaseDriver;
-import pages.HomePage;
-import pages.ShoesPage;
+import pages.nikeHomePage;
+import pages.nikeShoesPage;
 
-public class NikeTestSize {
+public class NikeSizeTest {
     public static void main(String[] args) throws InterruptedException {
-        /* The next test
+        /* The test
         will check whether the number of results displayed
         matches what was defined.
          */
-        System.out.println("Start test");
         BaseDriver.setupDriver();
-        HomePage homePage = new HomePage(BaseDriver.getDriver());
+        nikeHomePage homePage = new nikeHomePage(BaseDriver.getDriver());
+        nikeShoesPage shoesPage = new nikeShoesPage(BaseDriver.getDriver());
 
         homePage.navigateToHomePage();
         homePage.selectMenCategory();
-        ShoesPage shoesPage = new ShoesPage(BaseDriver.getDriver());
         shoesPage.selectShoesCategory();
         shoesPage.selectWalkingCategory();
-        System.out.println("Entered the Walking category.");
         int productCount = shoesPage.amountOfProducts();
-        shoesPage.fallsTestAmount(productCount, 100);
-
-
+        shoesPage.verifyTestAmount(productCount, 100);
 
         BaseDriver.closeDriver();
-
-
-
-
 
     }
 }

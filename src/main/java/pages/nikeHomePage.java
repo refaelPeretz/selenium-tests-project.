@@ -1,35 +1,38 @@
-package tests;
-import base.BaseDriver;
+package pages;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import pages.HomePage;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class NikeTestNavBar {
-    public static void main(String[] args) {
-        /*The next test
-         will check whether the menu matches
-         a list of strings that I defined as a menu.
-         */
-        System.out.println("test start");
-        BaseDriver.setupDriver();
-        WebDriver driver = BaseDriver.getDriver();
+public class nikeHomePage {
 
-        // Navigating the Nike homepage.
-        HomePage homePage = new HomePage(driver);
-        homePage.navigateToHomePage();
+    private WebDriver driver;
 
-        // Expected list of menu items
-        List<String> expectedMenu = Arrays.asList("New & Featured", "Men", "Women", "Kids");
+    public nikeHomePage(WebDriver driver) {
+        this.driver = driver;
+    }
 
+    // Navigation to the home page
+    public void navigateToHomePage() {
+        driver.get("https://www.nike.com/");
+    }
 
+    // Choosing a Men's Category
+    public void selectMenCategory() {
+        driver.findElement(By.linkText("Men")).click(); //
+    }
+    // Function for clicking on the "Shoes" subcategory
+    public void selectShoesCategory() {
+
+        driver.findElement(By.linkText("Shoes")).click(); // Change to Text that matches the site
+    }
+    public void verifyNavBar(List expectedMenu){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         List<WebElement> menuElements = wait.until(
                 ExpectedConditions.presenceOfAllElementsLocatedBy(By.className("menu-hover-trigger-link"))
@@ -39,7 +42,7 @@ public class NikeTestNavBar {
         List<String> actualMenu = new ArrayList<>();
         for (WebElement element : menuElements) {
             System.out.println(element.getText());
-            actualMenu.add(element.getText().trim()); // הוספת הטקסט לרשימה
+            actualMenu.add(element.getText().trim()); // Add text to list
         }
 
         // Compare between the expected list and the actual list
@@ -50,7 +53,7 @@ public class NikeTestNavBar {
             System.out.println("Expected: " + expectedMenu);
             System.out.println("Actual: " + actualMenu);
         }
-
-        BaseDriver.closeDriver();
     }
+
+
 }
